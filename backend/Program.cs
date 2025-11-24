@@ -110,4 +110,9 @@ app.MapGet("/health", () => new { status = "OK", timestamp = DateTime.UtcNow })
 
 app.MapControllers();
 
+// Configurar URLs de escuta - suportar acesso via IP da VM
+var urls = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://0.0.0.0:6660";
+app.Urls.Clear();
+app.Urls.Add(urls);
+
 app.Run();

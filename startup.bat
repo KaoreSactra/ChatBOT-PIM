@@ -15,11 +15,22 @@ set "BASE_DIR=%~dp0"
 REM Remover barra final se existir
 if "%BASE_DIR:~-1%"=="\" set "BASE_DIR=%BASE_DIR:~0,-1%"
 
-REM Portas padrão
+REM Ler arquivo .env se existir
+set "BACKEND_URL=http://localhost"
+set "FRONTEND_URL=http://localhost"
 set "BACKEND_PORT=6660"
 set "FRONTEND_PORT=6661"
-set "BACKEND_URL=http://localhost:%BACKEND_PORT%"
-set "FRONTEND_URL=http://localhost:%FRONTEND_PORT%"
+
+if exist "%BASE_DIR%\.env" (
+    for /f "delims== tokens=1,2" %%a in ('findstr /b "BACKEND_URL\|BACKEND_PORT\|FRONTEND_URL\|FRONTEND_PORT\|FRONTEND_API_BASE_URL" "%BASE_DIR%\.env"') do (
+        set "%%a=%%b"
+    )
+)
+
+REM Se BACKEND_URL não foi lido do .env, usar localhost
+if "!BACKEND_URL!"=="http://localhost" set "BACKEND_URL=http://localhost:!BACKEND_PORT!"
+if "!FRONTEND_URL!"=="http://localhost" set "FRONTEND_URL=http://localhost:!FRONTEND_PORT!"
+if "!FRONTEND_API_BASE_URL!"=="" set "FRONTEND_API_BASE_URL=!BACKEND_URL!"
 
 echo [INFO] Diretório raiz: %BASE_DIR%
 echo.
@@ -61,6 +72,7 @@ if "%opcao%"=="1" (
     echo API Backend rodara em: %BACKEND_URL%
     echo.
     cd /d "%BASE_DIR%\backend"
+    set "ASPNETCORE_URLS=http://0.0.0.0:%BACKEND_PORT%"
     call dotnet run
 ) else if "%opcao%"=="2" (
     echo.
@@ -68,6 +80,7 @@ if "%opcao%"=="1" (
     echo Web Frontend rodara em: %FRONTEND_URL%
     echo.
     cd /d "%BASE_DIR%\frontend\app"
+    set "ASPNETCORE_URLS=http://0.0.0.0:%FRONTEND_PORT%"
     call dotnet run
 ) else if "%opcao%"=="3" (
     echo.

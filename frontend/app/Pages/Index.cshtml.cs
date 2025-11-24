@@ -28,7 +28,7 @@ public class IndexModel : PageModel
         var userId = HttpContext.Session.GetString("UserId");
         if (string.IsNullOrEmpty(userId))
         {
-            return RedirectToPage("/Auth/Login");
+            return RedirectToPage("/Login");
         }
 
         UserEmail = HttpContext.Session.GetString("UserEmail");
@@ -45,7 +45,7 @@ public class IndexModel : PageModel
         if (action == "logout")
         {
             HttpContext.Session.Clear();
-            return RedirectToPage("/Auth/Login");
+            return RedirectToPage("/Login");
         }
 
         return OnGet();

@@ -18,6 +18,18 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BASE_DIR="$SCRIPT_DIR"
 
+# Detectar IP da máquina (suporta VM com múltiplas interfaces)
+get_local_ip() {
+    # Tentar obter IP que não seja localhost
+    ip addr show 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '^127\.' | head -1
+}
+
+LOCAL_IP=$(get_local_ip)
+if [ -z "$LOCAL_IP" ]; then
+    # Fallback para localhost se não conseguir detectar IP
+    LOCAL_IP="localhost"
+fi
+
 # Função para criar .env se não existir
 setup_env() {
     local env_file="$1"
@@ -25,16 +37,17 @@ setup_env() {
     
     if [ ! -f "$env_file" ]; then
         echo -e "${YELLOW}⚠️  Criando $env_file...${NC}"
-        cat > "$env_file" << 'EOF'
+        cat > "$env_file" << EOF
 # Google Gemini API
 GOOGLE_GEMINI_API_KEY=AIzaSyCu6kOrIl18cvcCmWAkpiKqkcsRVdXnNBs
 
 # Backend Server
-BACKEND_URL=http://localhost:6660
+BACKEND_URL=http://${LOCAL_IP}:6660
 BACKEND_PORT=6660
+FRONTEND_API_BASE_URL=http://${LOCAL_IP}:6660
 
 # Frontend Server
-FRONTEND_URL=http://localhost:6661
+FRONTEND_URL=http://${LOCAL_IP}:6661
 FRONTEND_PORT=6661
 EOF
         echo -e "${GREEN}✓ $env_file criado${NC}"
@@ -49,9 +62,9 @@ load_env() {
 }
 
 # Definir valores padrão se não estiverem nas variáveis de ambiente
-BACKEND_URL="${BACKEND_URL:-http://localhost:6660}"
+BACKEND_URL="${BACKEND_URL:-http://${LOCAL_IP}:6660}"
 BACKEND_PORT="${BACKEND_PORT:-6660}"
-FRONTEND_URL="${FRONTEND_URL:-http://localhost:6661}"
+FRONTEND_URL="${FRONTEND_URL:-http://${LOCAL_IP}:6661}"
 FRONTEND_PORT="${FRONTEND_PORT:-6661}"
 
 # Verifica se está no diretório correto
@@ -104,14 +117,16 @@ case $opcao in
         echo ""
         echo -e "${BLUE}🚀 Iniciando API Backend...${NC}"
         cd "$BASE_DIR/backend"
-        echo -e "${YELLOW}API Backend rodará em: http://localhost:6660${NC}"
+        echo -e "${YELLOW}API Backend rodará em: ${BACKEND_URL}${NC}"
+        export ASPNETCORE_URLS="http://0.0.0.0:${BACKEND_PORT}"
         dotnet run
         ;;
     2)
         echo ""
         echo -e "${BLUE}🚀 Iniciando Web Frontend...${NC}"
         cd "$BASE_DIR/frontend/app"
-        echo -e "${YELLOW}Web Frontend rodará em: http://localhost:6661${NC}"
+        echo -e "${YELLOW}Web Frontend rodará em: ${FRONTEND_URL}${NC}"
+        export ASPNETCORE_URLS="http://0.0.0.0:${FRONTEND_PORT}"
         dotnet run
         ;;
     3)

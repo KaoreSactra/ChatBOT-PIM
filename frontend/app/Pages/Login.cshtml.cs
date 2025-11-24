@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using app.Services;
 
-namespace app.Pages.Auth
+namespace app.Pages
 {
     public class LoginModel : PageModel
     {

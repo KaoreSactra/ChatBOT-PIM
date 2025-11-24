@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using app.Services;
 
-namespace app.Pages.Auth
+namespace app.Pages
 {
     public class RegisterModel : PageModel
     {
@@ -42,7 +42,7 @@ namespace app.Pages.Auth
 
             if (success && user != null)
             {
-                return RedirectToPage("/Auth/Login", new { message = "Cadastro realizado com sucesso! Faça login." });
+                return RedirectToPage("/Login", new { message = "Cadastro realizado com sucesso! Faça login." });
             }
 
             ErrorMessage = error ?? "Erro ao registrar usuário.";
