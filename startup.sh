@@ -14,8 +14,9 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Diretório base
-BASE_DIR="/home/gustavoaragao/projects"
+# Diretório base - detecta automaticamente onde o script está localizado
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASE_DIR="$SCRIPT_DIR"
 
 # Função para criar .env se não existir
 setup_env() {
@@ -29,11 +30,11 @@ setup_env() {
 GOOGLE_GEMINI_API_KEY=AIzaSyCu6kOrIl18cvcCmWAkpiKqkcsRVdXnNBs
 
 # Backend Server
-BACKEND_URL=http://192.168.1.113:6660
+BACKEND_URL=http://localhost:6660
 BACKEND_PORT=6660
 
 # Frontend Server
-FRONTEND_URL=http://192.168.1.113:6661
+FRONTEND_URL=http://localhost:6661
 FRONTEND_PORT=6661
 EOF
         echo -e "${GREEN}✓ $env_file criado${NC}"
@@ -47,9 +48,18 @@ load_env() {
     fi
 }
 
+# Definir valores padrão se não estiverem nas variáveis de ambiente
+BACKEND_URL="${BACKEND_URL:-http://localhost:6660}"
+BACKEND_PORT="${BACKEND_PORT:-6660}"
+FRONTEND_URL="${FRONTEND_URL:-http://localhost:6661}"
+FRONTEND_PORT="${FRONTEND_PORT:-6661}"
+
 # Verifica se está no diretório correto
-if [ ! -d "$BASE_DIR" ]; then
-    echo -e "${RED}❌ Erro: Diretório de projetos não encontrado${NC}"
+if [ ! -d "$BASE_DIR/backend" ] || [ ! -d "$BASE_DIR/frontend" ]; then
+    echo -e "${RED}❌ Erro: Estrutura de diretórios inválida${NC}"
+    echo -e "${YELLOW}Esperado:${NC}"
+    echo "  $BASE_DIR/backend"
+    echo "  $BASE_DIR/frontend"
     exit 1
 fi
 
