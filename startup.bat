@@ -15,21 +15,28 @@ set "BASE_DIR=%~dp0"
 REM Remover barra final se existir
 if "%BASE_DIR:~-1%"=="\" set "BASE_DIR=%BASE_DIR:~0,-1%"
 
-REM Ler arquivo .env se existir
-set "BACKEND_URL=http://localhost"
-set "FRONTEND_URL=http://localhost"
+REM Valores padrão
+set "BACKEND_URL=http://localhost:6660"
+set "FRONTEND_URL=http://localhost:6661"
 set "BACKEND_PORT=6660"
 set "FRONTEND_PORT=6661"
+set "FRONTEND_API_BASE_URL=http://localhost:6660"
+set "GOOGLE_GEMINI_API_KEY="
+set "CONNECTION_STRING="
 
+REM Ler arquivo .env se existir
 if exist "%BASE_DIR%\.env" (
-    for /f "delims== tokens=1,2" %%a in ('findstr /b "BACKEND_URL\|BACKEND_PORT\|FRONTEND_URL\|FRONTEND_PORT\|FRONTEND_API_BASE_URL" "%BASE_DIR%\.env"') do (
-        set "%%a=%%b"
+    echo [INFO] Carregando arquivo .env...
+    for /f "usebackq eol=# delims==" %%a in ("%BASE_DIR%\.env") do (
+        if not "%%a"=="" (
+            set "%%a=%%b"
+        )
     )
 )
 
-REM Se BACKEND_URL não foi lido do .env, usar localhost
-if "!BACKEND_URL!"=="http://localhost" set "BACKEND_URL=http://localhost:!BACKEND_PORT!"
-if "!FRONTEND_URL!"=="http://localhost" set "FRONTEND_URL=http://localhost:!FRONTEND_PORT!"
+REM Se variáveis chave não foram lidas, usar localhost
+if "!BACKEND_URL!"=="" set "BACKEND_URL=http://localhost:!BACKEND_PORT!"
+if "!FRONTEND_URL!"=="" set "FRONTEND_URL=http://localhost:!FRONTEND_PORT!"
 if "!FRONTEND_API_BASE_URL!"=="" set "FRONTEND_API_BASE_URL=!BACKEND_URL!"
 
 echo [INFO] Diretório raiz: %BASE_DIR%
@@ -55,6 +62,18 @@ echo URLs Configuradas:
 echo   Backend:  %BACKEND_URL%
 echo   Frontend: %FRONTEND_URL%
 echo.
+echo Variaveis de Ambiente:
+if "%FRONTEND_API_BASE_URL%"=="" (
+    echo   FRONTEND_API_BASE_URL: (nao definida - usando backend)
+) else (
+    echo   FRONTEND_API_BASE_URL: %FRONTEND_API_BASE_URL%
+)
+if "%GOOGLE_GEMINI_API_KEY%"=="" (
+    echo   GOOGLE_GEMINI_API_KEY: (nao definida)
+) else (
+    echo   GOOGLE_GEMINI_API_KEY: (definida)
+)
+echo.
 echo Escolha uma opcao:
 echo 1. Iniciar apenas API Backend
 echo 2. Iniciar apenas Web Frontend
@@ -72,6 +91,10 @@ if "%opcao%"=="1" (
     echo API Backend rodara em: %BACKEND_URL%
     echo.
     cd /d "%BASE_DIR%\backend"
+    REM Copiar .env para o diretório backend se existir
+    if exist "%BASE_DIR%\.env" (
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\backend\.env" >nul 2>&1
+    )
     set "ASPNETCORE_URLS=http://0.0.0.0:%BACKEND_PORT%"
     call dotnet run
 ) else if "%opcao%"=="2" (
@@ -80,7 +103,12 @@ if "%opcao%"=="1" (
     echo Web Frontend rodara em: %FRONTEND_URL%
     echo.
     cd /d "%BASE_DIR%\frontend\app"
+    REM Copiar .env para o diretório frontend se existir
+    if exist "%BASE_DIR%\.env" (
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\frontend\app\.env" >nul 2>&1
+    )
     set "ASPNETCORE_URLS=http://0.0.0.0:%FRONTEND_PORT%"
+    set "FRONTEND_API_BASE_URL=%FRONTEND_API_BASE_URL%"
     call dotnet run
 ) else if "%opcao%"=="3" (
     echo.
@@ -88,16 +116,22 @@ if "%opcao%"=="1" (
     echo Abrindo em novas janelas...
     echo.
     
+    REM Copiar .env para ambos os diretórios
+    if exist "%BASE_DIR%\.env" (
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\backend\.env" >nul 2>&1
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\frontend\app\.env" >nul 2>&1
+    )
+    
     REM Backend em nova janela
     echo Iniciando Backend em: %BACKEND_URL%
-    start "ChatBot - Backend" cmd /k "cd /d %BASE_DIR%\backend && dotnet run"
+    start "ChatBot - Backend" cmd /k "cd /d %BASE_DIR%\backend && set ASPNETCORE_URLS=http://0.0.0.0:%BACKEND_PORT% && dotnet run"
     
     REM Aguardar um pouco para não sobrecarregar
     timeout /t 3 /nobreak
     
     REM Frontend em nova janela
     echo Iniciando Frontend em: %FRONTEND_URL%
-    start "ChatBot - Frontend" cmd /k "cd /d %BASE_DIR%\frontend\app && dotnet run"
+    start "ChatBot - Frontend" cmd /k "cd /d %BASE_DIR%\frontend\app && set ASPNETCORE_URLS=http://0.0.0.0:%FRONTEND_PORT% && set FRONTEND_API_BASE_URL=%FRONTEND_API_BASE_URL% && dotnet run"
     
     echo.
     echo [OK] Ambos os projetos foram iniciados em novas janelas!
@@ -111,11 +145,17 @@ if "%opcao%"=="1" (
 ) else if "%opcao%"=="4" (
     echo.
     echo [INFO] Compilando API Backend...
+    if exist "%BASE_DIR%\.env" (
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\backend\.env" >nul 2>&1
+    )
     cd /d "%BASE_DIR%\backend"
     call dotnet build
     
     echo.
     echo [INFO] Compilando Web Frontend...
+    if exist "%BASE_DIR%\.env" (
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\frontend\app\.env" >nul 2>&1
+    )
     cd /d "%BASE_DIR%\frontend\app"
     call dotnet build
     
@@ -141,10 +181,16 @@ if "%opcao%"=="1" (
     echo [INFO] Restaurando pacotes...
     
     echo [INFO] Restaurando API Backend...
+    if exist "%BASE_DIR%\.env" (
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\backend\.env" >nul 2>&1
+    )
     cd /d "%BASE_DIR%\backend"
     call dotnet restore
     
     echo [INFO] Restaurando Web Frontend...
+    if exist "%BASE_DIR%\.env" (
+        copy "%BASE_DIR%\.env" "%BASE_DIR%\frontend\app\.env" >nul 2>&1
+    )
     cd /d "%BASE_DIR%\frontend\app"
     call dotnet restore
     
