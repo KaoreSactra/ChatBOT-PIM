@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:DesktopSql"
              StartupUri="LoginWindow.xaml">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="PrimaryColor">#667eea</SolidColorBrush>
+        <SolidColorBrush x:Key="SecondaryColor">#764ba2</SolidColorBrush>
+        <SolidColorBrush x:Key="BackgroundColor">#f3f4f6</SolidColorBrush>
+        <SolidColorBrush x:Key="TextColor">#111827</SolidColorBrush>
+        <SolidColorBrush x:Key="ErrorColor">#dc2626</SolidColorBrush>
+        <SolidColorBrush x:Key="SuccessColor">#16a34a</SolidColorBrush>
     </Application.Resources>
 </Application>

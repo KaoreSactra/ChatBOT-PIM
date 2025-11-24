@@ -5,21 +5,93 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopSql"
         mc:Ignorable="d"
-        Title="Window1" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <RichTextBox x:Name="rtbChat" Grid.ColumnSpan="2" Margin="0,0,0,43">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text="RichTextBox"/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
-        <Button x:Name="btnEnviar" Grid.Column="1" Content="Enviar" HorizontalAlignment="Left" Margin="565,399,0,0" VerticalAlignment="Top" Width="101" Height="20" Click="btnEnviar_Click"/>
-        <TextBox x:Name="txtMensagem" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="176,400,0,0" TextWrapping="Wrap" Text="Digite sua mensagem..." VerticalAlignment="Top" Width="375"/>
+        Title="SQLBot - Chat" Height="800" Width="1200"
+        Background="#f3f4f6"
+        WindowStartupLocation="CenterScreen"
+        Closed="Window_Closed">
+    <Grid Background="#f3f4f6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
 
+        <!-- Header/Navbar -->
+        <Grid Grid.Row="0" Background="#111827">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+                <TextBlock Text="🤖 SQLBot" FontSize="18" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                <TextBlock x:Name="lblUserEmail" Foreground="#e5e7eb" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <TextBlock x:Name="lblUserRole" Foreground="#9ca3af" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12"/>
+            </StackPanel>
+            
+            <!-- Logout Button -->
+            <Button x:Name="btnLogout"
+                    Content="Sair"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,20,0"
+                    VerticalAlignment="Center"
+                    Background="#374151"
+                    Foreground="White"
+                    Padding="12,8"
+                    Click="BtnLogout_Click"
+                    Cursor="Hand"/>
+        </Grid>
+
+        <!-- Chat Area -->
+        <Grid Grid.Row="1" Background="White">
+            <RichTextBox x:Name="rtbChat"
+                         Background="White"
+                         Foreground="#111827"
+                         IsReadOnly="True"
+                         Margin="20"
+                         Padding="15"
+                         FontSize="14"
+                         FontFamily="Segoe UI"
+                         VerticalScrollBarVisibility="Auto"/>
+        </Grid>
+
+        <!-- Input Area -->
+        <Grid Grid.Row="2" Background="#f3f4f6" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Error Message -->
+            <TextBlock x:Name="lblError"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Foreground="#dc2626"
+                       Margin="0,0,0,10"
+                       TextWrapping="Wrap"
+                       Visibility="Collapsed"/>
+
+            <!-- Message Input -->
+            <TextBox x:Name="txtMensagem"
+                     Grid.Column="0"
+                     Height="45"
+                     Padding="12,10"
+                     FontSize="14"
+                     Background="White"
+                     Foreground="#111827"
+                     BorderBrush="#ddd"
+                     BorderThickness="1"
+                     VerticalContentAlignment="Center"
+                     Margin="0,0,10,0"/>
+
+            <!-- Send Button -->
+            <Button x:Name="btnEnviar"
+                    Grid.Column="1"
+                    Content="Enviar"
+                    Width="100"
+                    Height="45"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="White"
+                    Background="#667eea"
+                    BorderThickness="0"
+                    Click="BtnEnviar_Click"
+                    Cursor="Hand"/>
+        </Grid>
     </Grid>
 </Window>

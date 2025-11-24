@@ -1,7 +1,5 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using DesktopSql.Services; // <--- IMPORTANTE: Adicione isso para achar o ApiService
+﻿using System.Windows;
+using DesktopSql.Services;
 
 namespace DesktopSql
 {
@@ -10,44 +8,91 @@ namespace DesktopSql
     /// </summary>
     public partial class LoginWindow : Window
     {
-        // 1. Criamos uma variável para o serviço
         private readonly ApiService _apiService;
 
         public LoginWindow()
         {
             InitializeComponent();
-            // 2. Inicializamos o serviço quando a janela abre
             _apiService = new ApiService();
         }
 
-        // 3. Adicionamos 'async' aqui para poder esperar a resposta da API
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("O botão foi clicado!");
+            string email = txtEmail.Text?.Trim() ?? "";
+            string senha = txtSenha.Password ?? "";
 
-            string usuario = txtUsuario.Text;
-            
-            // ATENÇÃO: Se no XAML você usou <PasswordBox>, troque .Text por .Password
-            // Se usou <TextBox>, mantenha .Text (mas não é seguro para senhas)
-            string senha = txtSenha.Text; 
-
-            // Validação simples
-            if (string.IsNullOrWhiteSpace(usuario) || string.IsNullOrWhiteSpace(senha))
+            // Validação
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
             {
-                MessageBox.Show("Por favor, preencha usuário e senha.");
+                ShowError("Por favor, preencha email e senha.");
                 return;
             }
 
             try
             {
-                // Desabilita o botão para o usuário não clicar várias vezes
-                // (Converta sender para Button se necessário, ou use o x:Name do botão)
-                if (sender is Button btn) btn.IsEnabled = false;
+                btnLogin.IsEnabled = false;
+                btnLogin.Content = "Autenticando...";
 
-                // 4. Chama o Backend e espera a resposta
-                bool loginSucesso = await _apiService.LoginAsync(usuario, senha);
+                // Chamar API de login
+                var (success, message, user) = await _apiService.LoginAsync(email, senha);
 
-                if (loginSucesso)
+                if (success && user != null)
+                {
+                    // Salvar informações do usuário
+                    App.CurrentUser = user;
+                    App.UserToken = message; // Token ou ID da sessão
+
+                    // Abrir janela principal
+                    ChatWindow chatWindow = new ChatWindow();
+                    chatWindow.Show();
+                    this.Close();
+                }
+                else
+                {
+                    ShowError(message ?? "Erro ao fazer login. Verifique suas credenciais.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Erro: {ex.Message}");
+            }
+            finally
+            {
+                btnLogin.IsEnabled = true;
+                btnLogin.Content = "Entrar";
+            }
+        }
+
+        private void LinkRegister_Click(object sender, RoutedEventArgs e)
+        {
+            // Abrir janela de registro
+            RegisterWindow registerWindow = new RegisterWindow();
+            registerWindow.Show();
+            this.Close();
+        }
+
+        private void ShowError(string message)
+        {
+            ErrorMessage.Text = message;
+            ErrorBorder.Visibility = Visibility.Visible;
+        }
+
+        private void HideError()
+        {
+            ErrorBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void TxtEmail_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            HideError();
+        }
+
+        private void TxtSenha_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            HideError();
+        }
+    }
+}
                 {
                     // Login OK: Abre o Chat e fecha o Login
                     ChatWindow chat = new ChatWindow();

@@ -1,18 +1,29 @@
 namespace DesktopSql.Models
 {
-    // Essa classe deve ter os mesmos campos que sua API espera
+    public class LoginModel
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
+
     public class LoginRequest
     {
         public string Email { get; set; }
         public string Password { get; set; }
     }
 
+    public class RegisterRequest
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string Role { get; set; } = "user";
+    }
+
     public class LoginResponse
     {
-        // Ajuste conforme o que sua API retorna. 
-        // Se ela retorna só uma string ou um objeto JSON, precisamos saber.
-        // Vou assumir que ela retorna um JSON com token ou mensagem.
-        public string Token { get; set; }
+        public bool Success { get; set; }
         public string Message { get; set; }
+        public LoginModel User { get; set; }
     }
 }
