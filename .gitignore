@@ -1,5 +1,4 @@
 # Environment variables
-.env
 .env.local
 .env.*.local
 
@@ -44,11 +43,6 @@ logs/
 *.tmp
 tmp/
 temp/
-
-# Configuration files with sensitive data
-appsettings.json
-appsettings.Development.json
-launchSettings.json
 
 # Application Cache
 .cache/
