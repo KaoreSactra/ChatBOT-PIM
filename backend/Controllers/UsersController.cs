@@ -35,6 +35,29 @@ namespace api_back.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, newUser);
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<UserResponse>> Login(LoginRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                return BadRequest("Email e senha são obrigatórios");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            
+            if (user == null || !Hasher.Verify(request.Password, user.PasswordHash))
+            {
+                return Unauthorized("Email ou senha inválidos");
+            }
+
+            return Ok(new UserResponse
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Role = user.Role
+            });
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsers()
         {
