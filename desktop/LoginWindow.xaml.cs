@@ -93,26 +93,3 @@ namespace DesktopSql
         }
     }
 }
-                {
-                    // Login OK: Abre o Chat e fecha o Login
-                    ChatWindow chat = new ChatWindow();
-                    chat.Show();
-                    this.Close();
-                }
-                else
-                {
-                    MessageBox.Show("Usuário ou senha incorretos!");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro inesperado: {ex.Message}");
-            }
-            finally
-            {
-                // Reabilita o botão independente do resultado
-                if (sender is Button btn) btn.IsEnabled = true;
-            }
-        }
-    }
-}
