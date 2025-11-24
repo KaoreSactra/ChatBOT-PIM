@@ -63,16 +63,6 @@ if [ ! -d "$BASE_DIR/backend" ] || [ ! -d "$BASE_DIR/frontend" ]; then
     exit 1
 fi
 
-cd "$BASE_DIR"
-
-echo -e "${BLUE}📋 Verificando configuração...${NC}"
-echo ""
-
-# Verificar e criar .env files
-setup_env "$BASE_DIR/.env"
-setup_env "$BASE_DIR/backend/.env"
-setup_env "$BASE_DIR/frontend/app/.env"
-
 # Carregar variáveis de ambiente
 load_env
 

@@ -113,7 +113,42 @@ EOF
 
 ## ▶️ Executar a Aplicação
 
-### Opção 1: Executar em Dois Terminais (Recomendado)
+### ⭐ Opção 1: Script Startup (Recomendado para Todos)
+
+Use o script automatizado que funciona em **Windows, Linux e macOS**:
+
+#### No Windows:
+
+Clique duas vezes em `startup.bat` ou execute no prompt:
+
+```cmd
+startup.bat
+```
+
+#### No Linux/macOS:
+
+```bash
+chmod +x startup.sh
+./startup.sh
+```
+
+O script irá:
+
+- ✅ Detectar automaticamente o diretório do projeto
+- ✅ Criar arquivos `.env` com valores padrão (se não existirem)
+- ✅ Oferecer menu para iniciar, compilar ou limpar projetos
+- ✅ Funcionar em qualquer PC sem precisar de configurações extras
+
+**Menu de Opções:**
+
+1. Iniciar apenas API Backend
+2. Iniciar apenas Web Frontend
+3. Iniciar ambos os projetos
+4. Compilar ambos os projetos
+5. Limpar e reinstalar dependências
+6. Parar todos os processos
+
+### Opção 2: Executar em Dois Terminais
 
 **Terminal 1 - Backend:**
 
@@ -141,7 +176,7 @@ Você verá uma mensagem como:
 Now listening on: http://0.0.0.0:6661
 ```
 
-### Opção 2: Script Automatizado
+### Opção 3: Script Automatizado Manual
 
 ```bash
 #!/bin/bash
@@ -165,18 +200,49 @@ echo "✅ Backend PID: $BACKEND_PID"
 echo "✅ Frontend PID: $FRONTEND_PID"
 echo ""
 echo "🌐 Frontend disponível em: http://localhost:6661"
+```
+
+## ⚠️ Solução de Problemas
+
+### No Windows: Erro "O sistema não pode encontrar o caminho especificado"
+
+Se receber este erro ao tentar executar `startup.sh`, use `startup.bat` em vez disso:
+
+```cmd
+startup.bat
+```
+
+O arquivo `.bat` é o correto para Windows e não requer Git Bash ou WSL.
+
+### No Windows: Erro "Script disabled"
+
+Se receber erro de permissão, tente usar PowerShell com permissões de administrador:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### No Linux/macOS: Erro de Permissão
+
+Se receber "Permission denied", dê permissão de execução:
+
+```bash
+chmod +x startup.sh
+```
+
 echo "🔧 Backend disponível em: http://localhost:6660"
 echo ""
 echo "Para parar a aplicação, execute:"
 echo "kill $BACKEND_PID $FRONTEND_PID"
-```
+
+````
 
 Salve como `start.sh` e execute:
 
 ```bash
 chmod +x start.sh
 ./start.sh
-```
+````
 
 ## 🌐 Acessar a Aplicação
 
