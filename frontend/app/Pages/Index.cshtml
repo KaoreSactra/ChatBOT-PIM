@@ -77,9 +77,17 @@
 
         /* Chat */
         #chatMessages { flex: 1; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; background: #fafafa; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-        #chatMessages > div { background: #e5e7eb; color: #111827; padding: 10px 14px; border-radius: 8px; word-wrap: break-word; max-width: 75%; }
+        #chatMessages > div { background: #e5e7eb; color: #111827; padding: 10px 14px; border-radius: 8px; word-wrap: break-word; white-space: pre-wrap; overflow-wrap: break-word; max-width: 75%; line-height: 1.5; }
         #chatMessages > div.user-message { align-self: flex-end; background: #374151; color: #fff; }
         #chatMessages > div.bot-message { align-self: flex-start; background: #e5e7eb; }
+        
+        /* Formatação dentro das mensagens */
+        #chatMessages p { margin: 0; }
+        #chatMessages ul { margin: 8px 0 8px 20px; padding: 0; }
+        #chatMessages li { margin: 4px 0; list-style-type: disc; }
+        #chatMessages h4 { margin: 12px 0 8px 0; font-size: 14px; font-weight: 600; }
+        #chatMessages strong { font-weight: 600; }
+        #chatMessages em { font-style: italic; }
         #chatLoading { text-align: center; color: #6b7280; padding: 8px; display: none; font-size: 14px; }
         #chatLoading[style*="block"] { display: block; }
 
@@ -175,9 +183,7 @@
             }
             
             <div id="chatMessages">
-                <div class="bot-message">
-                    <strong>Bot:</strong> Diga seu problema em apenas uma mensagem!
-                </div>
+<div class="bot-message"><strong>Bot:</strong> Diga seu problema em apenas uma mensagem!</div>
             </div>
             
             <div id="chatLoading">Aguardando resposta...</div>
@@ -229,7 +235,7 @@
         // Ativa uma aba e sincroniza o estado
         function setActiveTab(tabName) {
             // Remove active de todos os painéis de conteúdo
-            const panels = document.querySelectorAll('[id="chat"], [id="dashboard"]');
+            const panels = document.querySelectorAll('#chat, #dashboard');
             panels.forEach(p => p.style.display = 'none');
             
             // Remove active de todos os botões
@@ -307,7 +313,8 @@
                 document.getElementById('chatLoading').style.display = 'none';
                 const botMessageDiv = document.createElement('div');
                 botMessageDiv.className = 'bot-message';
-                botMessageDiv.innerHTML = '<strong>Bot:</strong> ' + escapeHtml(data.response || 'Erro ao obter resposta');
+                const formattedResponse = formatMarkdown(data.response || 'Erro ao obter resposta');
+                botMessageDiv.innerHTML = '<strong>Bot:</strong> ' + formattedResponse;
                 chatMessages.appendChild(botMessageDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             })
@@ -319,6 +326,43 @@
                 chatMessages.appendChild(errorDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
+        }
+
+        function formatMarkdown(text) {
+            if (!text) return '';
+            
+            // Escapar HTML perigoso mas manter quebras de linha
+            text = text.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;');
+            
+            // Converter quebras de linha para <br>
+            text = text.replace(/\n\n/g, '</p><p>')
+                      .replace(/\n/g, '<br>');
+            
+            // Converter listas markdown simples (- item)
+            text = text.replace(/^- (.+)$/gm, '<li>$1</li>');
+            
+            // Envolve listas em <ul>
+            text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            
+            // Converter **negrito**
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            
+            // Converter *itálico*
+            text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            
+            // Converter números em títulos (1. título → <h4>título</h4>)
+            text = text.replace(/^(\d+)\.\s+(.+)$/gm, '<h4>$2</h4>');
+            
+            // Envolver em parágrafos se não tiver tags de bloco
+            if (!text.includes('<p>') && !text.includes('<ul>') && !text.includes('<h4>')) {
+                text = '<p>' + text + '</p>';
+            }
+            
+            return text;
         }
         
         function loadUsers() {
@@ -412,7 +456,16 @@
         });
 
         // Abre a aba de chat por padrão ao carregar
-        window.addEventListener('DOMContentLoaded', () => setActiveTab('chat'));
+        function initializeApp() {
+            setActiveTab('chat');
+        }
+        
+        // Executar quando DOM estiver pronto
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
     </script>
 </body>
 </html>
