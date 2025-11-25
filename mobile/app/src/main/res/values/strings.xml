@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ChatBOT-PIM</string>
+    <string name="login_title">ChatBOT-PIM</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Senha</string>
+    <string name="confirm_password_hint">Confirmar Senha</string>
+    <string name="login_button">Entrar</string>
+    <string name="register_button">Registrar</string>
+    <string name="no_account">Não tem conta? Registre-se aqui</string>
+    <string name="back_to_login">Voltar ao Login</string>
+    <string name="chat_hint">Digite sua mensagem...</string>
+    <string name="send_button">Enviar</string>
+    <string name="clear_chat">Limpar chat</string>
+    <string name="logout">Sair</string>
+</resources>

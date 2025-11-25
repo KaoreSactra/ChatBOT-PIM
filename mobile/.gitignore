@@ -1,0 +1,50 @@
+# Gradle files
+.gradle/
+build/
+.gradletasknamecache
+
+# Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+out/
+captures/
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Local configuration file (sdk path, etc)
+local.properties
+gradle.properties.local
+
+# Output of the sign Android app task.
+app-release.ufx
+app-release-unsigned.apk
+
+# ProGuard
+proguard-mapped.txt
+mapping.txt
+
+# Lint
+lint-results.txt
+lint-results-debug.html
+lint-results.html
+
+# Kotlin
+kotlin-build/
+
+# R.java references
+gen/
+
+# Backup files
+*.bak
+*~
+*.swp
+.#*
+
+# OS specific
+.DS_Store
+Thumbs.db
