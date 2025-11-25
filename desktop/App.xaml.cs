@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Windows;
 using DotNetEnv;
 using DesktopSql.Models;
@@ -25,13 +26,24 @@ namespace DesktopSql
                 Path.Combine(Directory.GetCurrentDirectory(), ".env"),                                   // Diretório raiz do projeto
             };
 
+            bool loaded = false;
             foreach (var envPath in possiblePaths)
             {
-                if (File.Exists(envPath))
+                var fullPath = Path.GetFullPath(envPath);
+                System.Diagnostics.Debug.WriteLine($"[App] Procurando .env em: {fullPath}");
+                
+                if (File.Exists(fullPath))
                 {
-                    DotNetEnv.Env.Load(envPath);
+                    DotNetEnv.Env.Load(fullPath);
+                    System.Diagnostics.Debug.WriteLine($"[App] .env carregado com sucesso de: {fullPath}");
+                    loaded = true;
                     break;
                 }
+            }
+            
+            if (!loaded)
+            {
+                System.Diagnostics.Debug.WriteLine($"[App] AVISO: Arquivo .env nao encontrado! Usando valores padrao.");
             }
         }
     }

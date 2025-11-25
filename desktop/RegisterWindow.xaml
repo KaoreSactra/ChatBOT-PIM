@@ -78,12 +78,10 @@
                     Margin="0,0,0,15"/>
             
             <!-- Back to Login -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Já tem conta? " Foreground="#555555" FontSize="14"/>
-                <Hyperlink x:Name="LinkLogin" Foreground="#667eea" NavigateUri="#" Click="LinkLogin_Click" FontSize="14">
-                    <TextBlock Text="Faça login"/>
-                </Hyperlink>
-            </StackPanel>
+            <TextBlock Foreground="#555555" FontSize="14" HorizontalAlignment="Center">
+                <Run Text="Já tem conta? "/>
+                <Hyperlink x:Name="LinkLogin" Foreground="#667eea" NavigateUri="#" Click="LinkLogin_Click">Faça login</Hyperlink>
+            </TextBlock>
         </StackPanel>
     </Grid>
 </Window>

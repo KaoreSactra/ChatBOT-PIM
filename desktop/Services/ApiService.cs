@@ -15,8 +15,41 @@ namespace DesktopSql.Services
         public ApiService()
         {
             _httpClient = new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            
             // Ler URL base do ambiente, com fallback para localhost
-            _baseUrl = Environment.GetEnvironmentVariable("FRONTEND_API_BASE_URL") ?? "http://localhost:6660";
+            var envUrl = Environment.GetEnvironmentVariable("FRONTEND_API_BASE_URL");
+            
+            System.Diagnostics.Debug.WriteLine($"[ApiService] FRONTEND_API_BASE_URL from env: '{envUrl}'");
+            
+            // Se vazio, nulo ou só espaços, usar localhost
+            if (string.IsNullOrWhiteSpace(envUrl))
+            {
+                _baseUrl = "http://localhost:6660";
+                System.Diagnostics.Debug.WriteLine($"[ApiService] Env var vazia, usando localhost");
+            }
+            else
+            {
+                _baseUrl = envUrl.Trim();
+                // Garantir que tem http://
+                if (!_baseUrl.StartsWith("http://") && !_baseUrl.StartsWith("https://"))
+                {
+                    _baseUrl = "http://" + _baseUrl;
+                }
+            }
+            
+            // Validar se a URL é válida
+            try
+            {
+                var uri = new Uri(_baseUrl);
+                System.Diagnostics.Debug.WriteLine($"[ApiService] Base URL validada: {_baseUrl}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ApiService] ERRO ao validar URL '{_baseUrl}': {ex.Message}");
+                _baseUrl = "http://localhost:6660";
+                System.Diagnostics.Debug.WriteLine($"[ApiService] Usando fallback: {_baseUrl}");
+            }
         }
 
         public async Task<(bool success, string message, LoginModel? user)> LoginAsync(string email, string password)
@@ -34,8 +67,14 @@ namespace DesktopSql.Services
                 var json = JsonSerializer.Serialize(loginRequest, options);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync($"{_baseUrl}/api/users/login", content);
+                var uri = $"{_baseUrl}/api/users/login";
+                System.Diagnostics.Debug.WriteLine($"[ApiService] Login URI: {uri}");
+                
+                var response = await _httpClient.PostAsync(uri, content);
                 var responseContent = await response.Content.ReadAsStringAsync();
+
+                System.Diagnostics.Debug.WriteLine($"[ApiService] Login Response: {response.StatusCode} - {responseContent}");
+
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -47,7 +86,7 @@ namespace DesktopSql.Services
 
                     if (loginResponse?.Success == true && loginResponse.User != null)
                     {
-                        return (true, loginResponse.User.Id, loginResponse.User);
+                        return (true, loginResponse.Message ?? "Login realizado com sucesso", loginResponse.User);
                     }
                     return (false, loginResponse?.Message ?? "Login falhou", null);
                 }

@@ -33,8 +33,20 @@ namespace app.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var user = JsonSerializer.Deserialize<UserResponse>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    return (true, user, null);
+                    
+                    // O backend retorna { success, message, user } - precisa fazer parsing aninhado
+                    using (JsonDocument doc = JsonDocument.Parse(content))
+                    {
+                        var root = doc.RootElement;
+                        if (root.TryGetProperty("user", out var userElement))
+                        {
+                            var user = JsonSerializer.Deserialize<UserResponse>(userElement.GetRawText(), 
+                                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                            return (true, user, null);
+                        }
+                    }
+                    
+                    return (false, null, "Resposta do servidor inválida");
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();
@@ -42,7 +54,7 @@ namespace app.Services
             }
             catch (Exception ex)
             {
-                return (false, null, ex.Message);
+                return (false, null, $"Erro na requisição: {ex.Message}");
             }
         }
 
@@ -56,8 +68,20 @@ namespace app.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var user = JsonSerializer.Deserialize<UserResponse>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    return (true, user, null);
+                    
+                    // O backend retorna { success, message, user } - precisa fazer parsing aninhado
+                    using (JsonDocument doc = JsonDocument.Parse(content))
+                    {
+                        var root = doc.RootElement;
+                        if (root.TryGetProperty("user", out var userElement))
+                        {
+                            var user = JsonSerializer.Deserialize<UserResponse>(userElement.GetRawText(), 
+                                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                            return (true, user, null);
+                        }
+                    }
+                    
+                    return (false, null, "Resposta do servidor inválida");
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();
@@ -65,7 +89,7 @@ namespace app.Services
             }
             catch (Exception ex)
             {
-                return (false, null, ex.Message);
+                return (false, null, $"Erro na requisição: {ex.Message}");
             }
         }
 
@@ -165,7 +189,7 @@ namespace app.Services
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var chatResponse = JsonSerializer.Deserialize<ChatResponse>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    return (true, chatResponse?.Message, null);
+                    return (true, chatResponse?.Response, null);
                 }
 
                 var errorContent = await response.Content.ReadAsStringAsync();

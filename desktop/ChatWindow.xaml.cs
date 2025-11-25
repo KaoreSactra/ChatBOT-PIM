@@ -52,7 +52,7 @@ namespace DesktopSql
                 }
 
                 // Chamar API
-                var (success, response) = await _apiService.SendChatMessageAsync(mensagem, App.CurrentUser.Id);
+                var (success, response) = await _apiService.SendChatMessageAsync(mensagem, App.CurrentUser.Id.ToString());
 
                 if (success)
                 {

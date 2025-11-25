@@ -28,7 +28,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 // Adicionar HttpClient com BaseAddress
-var apiBaseUrl = Environment.GetEnvironmentVariable("FRONTEND_API_BASE_URL") ?? "http://localhost:5000";
+var apiBaseUrl = Environment.GetEnvironmentVariable("FRONTEND_API_BASE_URL");
+
+// Se vazio, nulo ou só espaços, usar localhost:6660
+if (string.IsNullOrWhiteSpace(apiBaseUrl))
+{
+    apiBaseUrl = "http://localhost:6660";
+}
+else
+{
+    apiBaseUrl = apiBaseUrl.Trim();
+    // Garantir que tem http://
+    if (!apiBaseUrl.StartsWith("http://") && !apiBaseUrl.StartsWith("https://"))
+    {
+        apiBaseUrl = "http://" + apiBaseUrl;
+    }
+}
+
 Console.WriteLine($"[DEBUG] ApiBaseUrl usado: {apiBaseUrl}");
 builder.Services.AddHttpClient<IApiService, ApiService>(client =>
 {

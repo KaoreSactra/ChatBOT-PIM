@@ -159,7 +159,7 @@ namespace api_back.Controllers
                     {
                         return Ok(new ChatResponse
                         {
-                            Message = "Para problemas de hardware, recomendamos abrir um email para: suporte@sqlsolucoes.com\n\n📧 Descreva seu problema técnico de hardware neste email e nossa equipe técnica entrará em contato.",
+                            Response = "Para problemas de hardware, recomendamos abrir um email para: suporte@sqlsolucoes.com\n\n📧 Descreva seu problema técnico de hardware neste email e nossa equipe técnica entrará em contato.",
                             Success = true
                         });
                     }
@@ -167,7 +167,7 @@ namespace api_back.Controllers
                     {
                         return Ok(new ChatResponse
                         {
-                            Message = $"Entendi seu problema de software. Deixe comigo!\n\nVocê disse: \"{request.Message}\"\n\nConfigure GoogleGeminiApiKey para usar a API real do Gemini e receberá ajuda completa.",
+                            Response = $"Entendi seu problema de software. Deixe comigo!\n\nVocê disse: \"{request.Message}\"\n\nConfigure GoogleGeminiApiKey para usar a API real do Gemini e receberá ajuda completa.",
                             Success = true
                         });
                     }
@@ -175,7 +175,7 @@ namespace api_back.Controllers
                     {
                         return Ok(new ChatResponse
                         {
-                            Message = "Desculpe, não entendi. Por favor, descreva um problema de hardware ou software.",
+                            Response = "Desculpe, não entendi. Por favor, descreva um problema de hardware ou software.",
                             Success = true
                         });
                     }
@@ -247,7 +247,7 @@ INSTRUÇÕES OBRIGATÓRIAS:
                         {
                             return Ok(new ChatResponse
                             {
-                                Message = "Para problemas de hardware, recomendamos abrir um email para: suporte@sqlsolucoes.com\n\n📧 Descreva seu problema técnico de hardware neste email e nossa equipe técnica entrará em contato.",
+                                Response = "Para problemas de hardware, recomendamos abrir um email para: suporte@sqlsolucoes.com\n\n📧 Descreva seu problema técnico de hardware neste email e nossa equipe técnica entrará em contato.",
                                 Success = true
                             });
                         }
@@ -255,7 +255,7 @@ INSTRUÇÕES OBRIGATÓRIAS:
                         {
                             return Ok(new ChatResponse
                             {
-                                Message = $"Entendi seu problema de software: \"{request.Message}\"\n\nPor favor, envie um email para: suporte@sqlsolucoes.com com detalhes do seu problema para que nossa equipe possa ajudar melhor.",
+                                Response = $"Entendi seu problema de software: \"{request.Message}\"\n\nPor favor, envie um email para: suporte@sqlsolucoes.com com detalhes do seu problema para que nossa equipe possa ajudar melhor.",
                                 Success = true
                             });
                         }
@@ -263,7 +263,7 @@ INSTRUÇÕES OBRIGATÓRIAS:
                         {
                             return Ok(new ChatResponse
                             {
-                                Message = "Desculpe, não consegui processar sua solicitação no momento. Por favor, entre em contato conosco em: suporte@sqlsolucoes.com",
+                                Response = "Desculpe, não consegui processar sua solicitação no momento. Por favor, entre em contato conosco em: suporte@sqlsolucoes.com",
                                 Success = true
                             });
                         }
@@ -335,7 +335,7 @@ INSTRUÇÕES OBRIGATÓRIAS:
                             
                             return Ok(new ChatResponse
                             {
-                                Message = text,
+                                Response = text,
                                 Success = true
                             });
                         }

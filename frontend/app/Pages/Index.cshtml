@@ -307,7 +307,7 @@
                 document.getElementById('chatLoading').style.display = 'none';
                 const botMessageDiv = document.createElement('div');
                 botMessageDiv.className = 'bot-message';
-                botMessageDiv.innerHTML = '<strong>Bot:</strong> ' + escapeHtml(data.message || 'Erro ao obter resposta');
+                botMessageDiv.innerHTML = '<strong>Bot:</strong> ' + escapeHtml(data.response || 'Erro ao obter resposta');
                 chatMessages.appendChild(botMessageDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             })

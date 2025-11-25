@@ -8,7 +8,6 @@
         Title="SQLBot - Login" Height="600" Width="500"
         Background="#f3f4f6"
         WindowStartupLocation="CenterScreen"
-        Icon="pack://application:,,,/Assets/icon.ico"
         ResizeMode="NoResize">
     <Grid Background="#f3f4f6">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="350">
@@ -67,12 +66,10 @@
                     Margin="0,0,0,15"/>
             
             <!-- Register Link -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Não tem conta? " Foreground="#555555" FontSize="14"/>
-                <Hyperlink x:Name="LinkRegister" Foreground="#667eea" NavigateUri="#" Click="LinkRegister_Click" FontSize="14">
-                    <TextBlock Text="Registre-se aqui"/>
-                </Hyperlink>
-            </StackPanel>
+            <TextBlock Foreground="#555555" FontSize="14" HorizontalAlignment="Center">
+                <Run Text="Não tem conta? "/>
+                <Hyperlink x:Name="LinkRegister" Foreground="#667eea" NavigateUri="#" Click="LinkRegister_Click">Registre-se aqui</Hyperlink>
+            </TextBlock>
         </StackPanel>
     </Grid>
 </Window>

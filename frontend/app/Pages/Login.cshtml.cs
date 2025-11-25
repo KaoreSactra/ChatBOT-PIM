@@ -36,16 +36,16 @@ namespace app.Pages
 
             var (success, user, error) = await _apiService.LoginAsync(email, password);
 
-            if (success && user != null)
+            if (success && user != null && !string.IsNullOrEmpty(user.Email))
             {
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
                 HttpContext.Session.SetString("UserEmail", user.Email);
-                HttpContext.Session.SetString("UserRole", user.Role);
+                HttpContext.Session.SetString("UserRole", user.Role ?? "user");
                 
                 return RedirectToPage("/Index");
             }
 
-            ErrorMessage = error ?? "Erro ao fazer login.";
+            ErrorMessage = error ?? "Erro ao fazer login. Verifique suas credenciais ou se a API está disponível.";
             return Page();
         }
     }

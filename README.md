@@ -1,437 +1,193 @@
-# ChatBOT-PIM 🤖
+# 🤖 ChatBot PIM - Tutorial Completo
 
-Sistema de chatbot inteligente para suporte técnico com integração ao Google Gemini, desenvolvido com C# .NET e Razor Pages.
+Guia passo a passo para instalar e executar o ChatBot PIM no Windows.
 
-## 📋 Pré-requisitos
+## Requisitos Obrigatórios
 
-Antes de começar, certifique-se de ter instalado:
+### 1. .NET 8.0 SDK
 
-- **Git** - Para clonar o repositório
-- **.NET SDK 8.0+** - [Download](https://dotnet.microsoft.com/download)
-- **SQLite** (opcional) - Banco de dados local para desenvolvimento
+- Acesse: https://dotnet.microsoft.com/download/dotnet/8.0
+- Clique em Download .NET SDK para Windows
+- Execute o instalador e siga as instruções
+- Reinicie o computador
 
-### Verificar Instalações
-
-```bash
-# Verificar Git
-git --version
-
-# Verificar .NET SDK
+**Verificar instalacao:**
+```
 dotnet --version
 ```
 
-## 🚀 Instalação Rápida
+Voce deve ver: 8.0.xxx
 
-### 1. Clonar o Repositório
+### 2. Git (Opcional)
 
-```bash
+- Acesse: https://git-scm.com/download/win
+- Execute o instalador
+- Reinicie o computador
+
+## Como Comecar
+
+### Opcao A: Clonar com Git
+
+```
+cd C:\Users\SeuUsuario\Documents
 git clone https://github.com/KaoreSactra/ChatBOT-PIM.git
 cd ChatBOT-PIM
 ```
 
-### 2. Restaurar Dependências
+### Opcao B: Download Manual
 
-```bash
-# Backend
-cd backend
-dotnet restore
-cd ..
+1. Visite https://github.com/KaoreSactra/ChatBOT-PIM
+2. Clique em Code → Download ZIP
+3. Extraia em uma pasta
+4. Abra a pasta no Prompt de Comando
 
-# Frontend
-cd frontend/app
-dotnet restore
-cd ../..
-```
+## Primeira Execucao
 
-### 3. Compilar Projetos
+### Opcao Mais Facil: Use o startup.bat
 
-```bash
-# Backend
-cd backend
-dotnet build
-cd ..
+1. Abra a pasta ChatBOT-PIM
+2. Clique 2 vezes em startup.bat
+3. Digite 1 e pressione ENTER
+4. Aguarde 10-15 segundos
 
-# Frontend
-cd frontend/app
-dotnet build
-cd ../..
-```
+Voce vera 3 janelas abrindo:
+- Janela 1: Backend API (porta 6660)
+- Janela 2: Frontend Web (porta 6661)
+- Janela 3: Aplicacao Desktop
 
-## 🔐 Configuração de Variáveis de Ambiente
+## Testando a Aplicacao
 
-O projeto utiliza variáveis de ambiente para dados sensíveis. Você precisa criar arquivos `.env` em dois locais:
+### Backend (API)
 
-### Criar `.env` na Raiz do Projeto
+Abra seu navegador em:
+http://localhost:6660/swagger
 
-```bash
-cat > .env << 'EOF'
-# Google Gemini API
-GOOGLE_GEMINI_API_KEY=sua_chave_api_aqui
+Voce vera uma documentacao interativa da API.
 
-# Backend Server
-BACKEND_URL=http://localhost:6660
-BACKEND_PORT=6660
+### Frontend (Web)
 
-# Frontend Server
-FRONTEND_API_BASE_URL=http://localhost:6660
-EOF
-```
+Acesse em seu navegador:
+http://localhost:6661
 
-### Criar `.env` no Backend
+Credenciais padrao:
+- Email: admin@admin.com
+- Senha: admin
 
-```bash
-cat > backend/.env << 'EOF'
-# Google Gemini API
-GOOGLE_GEMINI_API_KEY=sua_chave_api_aqui
+Clique em Login e sera redirecionado para o chat.
 
-# Backend Server
-BACKEND_URL=http://localhost:6660
-BACKEND_PORT=6660
+### Desktop
 
-# Frontend Server
-FRONTEND_API_BASE_URL=http://localhost:6660
-EOF
-```
+A aplicacao abre automaticamente.
+Faca login com as mesmas credenciais.
 
-### Criar `.env` no Frontend
+### Teste o Chat
 
-```bash
-cat > frontend/app/.env << 'EOF'
-# Google Gemini API
-GOOGLE_GEMINI_API_KEY=sua_chave_api_aqui
+No web ou desktop, clique na aba Chat e digite uma mensagem:
+- Exemplo: "Qual é o melhor processador?"
 
-# Backend Server
-BACKEND_URL=http://localhost:6660
-BACKEND_PORT=6660
+Respostas esperadas:
+- Com Google Gemini: Respostas inteligentes de IA
+- Sem chave Gemini: Respostas genericas padrao
 
-# Frontend Server
-FRONTEND_API_BASE_URL=http://localhost:6660
-EOF
-```
+## Menu do startup.bat
 
-**⚠️ Importante:** Substitua `sua_chave_api_aqui` pela sua chave real da API Google Gemini. [Obter chave](https://makersuite.google.com/app/apikey)
+Opcao 1: Iniciar tudo (Backend, Frontend e Desktop)
+Opcao 2: Opcoes avancadas (iniciar apenas um, compilar, limpar, etc)
+Opcao 3: Parar todos os processos
 
-## ▶️ Executar a Aplicação
+## Resolucao de Problemas
 
-### ⭐ Opção 1: Script Startup (Recomendado para Todos)
+### "dotnet nao é reconhecido"
 
-Use o script automatizado que funciona em **Windows, Linux e macOS**:
+- Reinstale o .NET 8.0 SDK
+- Reinicie o computador
+- Abra uma nova janela de Prompt de Comando
 
-#### No Windows:
+### "Porta ja está em uso"
 
-Clique duas vezes em `startup.bat` ou execute no prompt:
+- No startup.bat, clique opcao 3 para parar tudo
+- Aguarde 10 segundos
+- Execute novamente com opcao 1
 
-```cmd
-startup.bat
-```
+### "Erro ao conectar com API"
 
-#### No Linux/macOS:
+No Desktop:
+- Verifique se o Backend está rodando (janela 1 aberta)
+- Se nao, reinicie
 
-```bash
-chmod +x startup.sh
-./startup.sh
-```
+No Web:
+- Aguarde o backend iniciar (leva ~10 segundos)
+- Se falhar, recarregue a página (F5)
 
-O script irá:
+### "Chat nao responde"
 
-- ✅ Detectar automaticamente o diretório do projeto
-- ✅ Criar arquivos `.env` com valores padrão (se não existirem)
-- ✅ Oferecer menu para iniciar, compilar ou limpar projetos
-- ✅ Funcionar em qualquer PC sem precisar de configurações extras
+Causas:
+1. Voce nao tem a chave do Google Gemini (normal, usará respostas padrao)
+2. Conexao com internet com problema
+3. Backend nao respondendo (reinicie com startup.bat)
 
-**Menu de Opções:**
+### "Caracteres estranhos no startup.bat"
 
-1. Iniciar apenas API Backend
-2. Iniciar apenas Web Frontend
-3. Iniciar ambos os projetos
-4. Compilar ambos os projetos
-5. Limpar e reinstalar dependências
-6. Parar todos os processos
+Se vir símbolos esquisitos:
+- Use PowerShell em vez do Prompt de Comando
+- Ou clique em Opcoes Avancadas em vez de digitar direto
 
-### Opção 2: Executar em Dois Terminais
+## Estrutura do Projeto
 
-**Terminal 1 - Backend:**
-
-```bash
-cd backend
-dotnet run
-```
-
-Você verá uma mensagem como:
-
-```
-Now listening on: http://0.0.0.0:6660
-```
-
-**Terminal 2 - Frontend:**
-
-```bash
-cd frontend/app
-dotnet run
-```
-
-Você verá uma mensagem como:
-
-```
-Now listening on: http://0.0.0.0:6661
-```
-
-### Opção 3: Script Automatizado Manual
-
-```bash
-#!/bin/bash
-
-# Limpar builds antigos
-cd backend && dotnet clean && rm -rf bin obj && cd ..
-cd frontend/app && dotnet clean && rm -rf bin obj && cd ../..
-
-# Iniciar Backend em background
-cd backend && dotnet run &
-BACKEND_PID=$!
-
-# Aguardar backend iniciar
-sleep 3
-
-# Iniciar Frontend em background
-cd frontend/app && dotnet run &
-FRONTEND_PID=$!
-
-echo "✅ Backend PID: $BACKEND_PID"
-echo "✅ Frontend PID: $FRONTEND_PID"
-echo ""
-echo "🌐 Frontend disponível em: http://localhost:6661"
-```
-
-## ⚠️ Solução de Problemas
-
-### No Windows: Erro "O sistema não pode encontrar o caminho especificado"
-
-Se receber este erro ao tentar executar `startup.sh`, use `startup.bat` em vez disso:
-
-```cmd
-startup.bat
-```
-
-O arquivo `.bat` é o correto para Windows e não requer Git Bash ou WSL.
-
-### No Windows: Erro "Script disabled"
-
-Se receber erro de permissão, tente usar PowerShell com permissões de administrador:
-
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-### No Linux/macOS: Erro de Permissão
-
-Se receber "Permission denied", dê permissão de execução:
-
-```bash
-chmod +x startup.sh
-```
-
-echo "🔧 Backend disponível em: http://localhost:6660"
-echo ""
-echo "Para parar a aplicação, execute:"
-echo "kill $BACKEND_PID $FRONTEND_PID"
-
-````
-
-Salve como `start.sh` e execute:
-
-```bash
-chmod +x start.sh
-./start.sh
-````
-
-## 🌐 Acessar a Aplicação
-
-Após iniciar ambos os servidores:
-
-- **Frontend**: [http://localhost:6661](http://localhost:6661)
-- **Backend API**: [http://localhost:6660](http://localhost:6660)
-
-## 👤 Credenciais Padrão
-
-O sistema cria automaticamente um usuário admin no primeiro acesso:
-
-- **Email**: `admin@admin.com`
-- **Senha**: `admin`
-
-## 📁 Estrutura do Projeto
-
-```
 ChatBOT-PIM/
-├── backend/                    # API em C# .NET
-│   ├── Controllers/            # Endpoints da API
-│   ├── Models/                 # Modelos de dados
-│   ├── Data/                   # Contexto do banco de dados
-│   ├── Program.cs              # Configuração da aplicação
-│   ├── api-back.csproj         # Dependências do backend
-│   └── .env                    # Variáveis de ambiente (não versionado)
-│
-├── frontend/
-│   └── app/                    # Aplicação web com Razor Pages
-│       ├── Pages/              # Páginas Razor
-│       ├── Services/           # Serviços de integração com API
-│       ├── Program.cs          # Configuração da aplicação
-│       ├── app.csproj          # Dependências do frontend
-│       └── .env                # Variáveis de ambiente (não versionado)
-│
-├── .env                        # Variáveis globais (não versionado)
-├── .gitignore                  # Arquivos ignorados pelo Git
-└── README.md                   # Este arquivo
-```
+├── backend/          (API do servidor)
+├── frontend/         (Site/Aplicacao Web)
+├── desktop/          (Aplicacao Desktop)
+├── startup.bat       (Script para rodar tudo)
+├── .env              (Configuracoes)
+└── README.md         (Este arquivo)
 
-## 🔧 Variáveis de Ambiente
+## URLs e Credenciais Padrao
 
-As seguintes variáveis podem ser configuradas no `.env`:
+URLs:
+- Frontend Web: http://localhost:6661
+- Backend API: http://localhost:6660
+- API Docs: http://localhost:6660/swagger
 
-| Variável                | Descrição                  | Exemplo                 |
-| ----------------------- | -------------------------- | ----------------------- |
-| `GOOGLE_GEMINI_API_KEY` | Chave da API Google Gemini | `AIzaSy...`             |
-| `BACKEND_URL`           | URL do backend             | `http://localhost:6660` |
-| `BACKEND_PORT`          | Porta do backend           | `6660`                  |
-| `FRONTEND_API_BASE_URL` | URL da API para o frontend | `http://localhost:6660` |
+Credenciais:
+- Email: admin@admin.com
+- Senha: admin
 
-## 🛠️ Comandos Úteis
+## Recursos
 
-### Limpar Builds
+Frontend Web:
+- Login e Registro
+- Chat com IA
+- Dashboard administrativo
+- Interface responsiva
 
-```bash
-# Backend
-cd backend && dotnet clean && rm -rf bin obj && cd ..
+Desktop:
+- Aplicacao Windows nativa
+- Login e Registro
+- Chat em tempo real
 
-# Frontend
-cd frontend/app && dotnet clean && rm -rf bin obj && cd ../..
-```
+Backend API:
+- Autenticacao de usuarios
+- Chat com Google Gemini
+- Banco de dados em memoria
+- Documentacao Swagger
+- CORS habilitado
 
-### Rebuild Completo
+## Proximos Passos
 
-```bash
-# Backend
-cd backend && dotnet clean && rm -rf bin obj && dotnet build && cd ..
+1. Criar novo usuario: No frontend/desktop, clique em Registrar
+2. Adicionar chave Gemini: https://ai.google.dev/
+3. Explorar Dashboard: Se logar como admin
+4. Testar API: http://localhost:6660/swagger
 
-# Frontend
-cd frontend/app && dotnet clean && rm -rf bin obj && dotnet build && cd ../..
-```
+## Suporte
 
-### Restaurar Dependências
+- GitHub: https://github.com/KaoreSactra/ChatBOT-PIM
+- Issues: https://github.com/KaoreSactra/ChatBOT-PIM/issues
 
-```bash
-# Backend
-cd backend && dotnet restore && cd ..
+## Licenca
 
-# Frontend
-cd frontend/app && dotnet restore && cd ../..
-```
+Este projeto é fornecido como está para fins educacionais e de demonstracao.
 
-### Parar a Aplicação
-
-Se a aplicação estiver rodando em background:
-
-```bash
-# Parar todos os processos dotnet run
-pkill -f "dotnet run"
-
-# Ou para um PID específico
-kill <PID>
-```
-
-### Testar Conexão com Backend
-
-```bash
-# Via curl
-curl -s http://localhost:6660/api/users | jq
-
-# Via wget
-wget -qO- http://localhost:6660/api/users
-```
-
-## 🔐 Segurança
-
-- **Variáveis sensíveis** são armazenadas em `.env` e **não são versionadas** (protegidas pelo `.gitignore`)
-- Dados de autenticação são protegidos com **BCrypt**
-- As chaves da API nunca aparecem no repositório
-- Arquivo `.gitignore` protege automaticamente:
-  - `.env` e variações (`.env.local`, `.env.*.local`)
-  - `appsettings.json` e `appsettings.Development.json`
-  - Diretórios `bin/` e `obj/`
-  - Arquivos de IDE (`.vs/`, `.vscode/`)
-
-## 🐛 Troubleshooting
-
-### Porta Já Está em Uso
-
-Se receber erro `Address already in use`:
-
-```bash
-# Parar processos dotnet
-pkill -f "dotnet run"
-
-# Ou especificar portas diferentes no .env
-BACKEND_PORT=6670
-FRONTEND_API_BASE_URL=http://localhost:6670
-```
-
-### Erro ao Carregar `.env`
-
-Certifique-se de que o arquivo `.env` existe no diretório correto:
-
-```bash
-# Verificar arquivos
-ls -la .env
-ls -la backend/.env
-ls -la frontend/app/.env
-```
-
-### Erro de Conexão Backend
-
-Verifique se o backend está rodando:
-
-```bash
-# Testar conectividade
-curl http://localhost:6660
-
-# Verificar processos
-ps aux | grep "dotnet run"
-```
-
-### Erro de API Key Inválida
-
-Certifique-se de que a chave do Google Gemini está corretamente configurada:
-
-```bash
-# Verificar se a chave está carregada
-echo $GOOGLE_GEMINI_API_KEY
-```
-
-## 📚 Endpoints Principais da API
-
-| Método | Endpoint              | Descrição                  |
-| ------ | --------------------- | -------------------------- |
-| POST   | `/api/users/login`    | Fazer login                |
-| POST   | `/api/users/register` | Criar nova conta           |
-| GET    | `/api/users`          | Listar usuários (admin)    |
-| POST   | `/api/chat/send`      | Enviar mensagem ao chatbot |
-
-## 🤝 Contribuindo
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-## 📧 Suporte
-
-Para suporte, entre em contato através da página de issues do repositório:
-[GitHub Issues](https://github.com/KaoreSactra/ChatBOT-PIM/issues)
-
----
-
-**Desenvolvido com ❤️ usando C# .NET e Razor Pages**
+Ultima atualizacao: Novembro 2025
+Versao: 1.0.0

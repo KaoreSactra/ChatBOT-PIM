@@ -36,25 +36,38 @@ namespace api_back.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserResponse>> Login(LoginRequest request)
+        public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
             {
-                return BadRequest("Email e senha são obrigatórios");
+                return BadRequest(new LoginResponse 
+                { 
+                    Success = false, 
+                    Message = "Email e senha são obrigatórios" 
+                });
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             
             if (user == null || !Hasher.Verify(request.Password, user.PasswordHash))
             {
-                return Unauthorized("Email ou senha inválidos");
+                return Unauthorized(new LoginResponse 
+                { 
+                    Success = false, 
+                    Message = "Email ou senha inválidos" 
+                });
             }
 
-            return Ok(new UserResponse
+            return Ok(new LoginResponse
             {
-                Id = user.Id,
-                Email = user.Email,
-                Role = user.Role
+                Success = true,
+                Message = "Login realizado com sucesso",
+                User = new UserResponse
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Role = user.Role
+                }
             });
         }
 
